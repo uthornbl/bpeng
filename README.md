@@ -44,3 +44,13 @@ If you make changes you can restart using:
 ```
 vagrant reload --provision
 ```
+
+# Testing
+The micro-service serves a basic web page at `http://192.168.50.50`
+When you launch Vagrant the last step in the Ansible playbook (`Basic test of micro-service`)
+is to run a simple test script (`basictest.py`) that will reveal if the deployment
+was successful or not.
+From the host OS you may also launch a browser and try to access:
+```
+http://192.168.50.50
+```

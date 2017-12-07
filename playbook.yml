@@ -14,8 +14,9 @@
         state: present
     - name: Verify docker registry is accessible
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present
-    - name: Install docker + deps
+    - name: Install docker
       apt: name=docker-engine update_cache=yes
+    - name: Install pip
       apt: name=python-pip update_cache=yes
     - service: name=docker state=restarted
     - copy: src="nginx-html" dest="~/"
@@ -33,4 +34,7 @@
         image: "nginx-by-ulf:v1"
         state: reloaded
         ports: 80:80
-    - script: basictest.py
+    - name: Basic test of micro-service
+      script: basictest.py
+      register: testresult
+    - debug:  msg="{{ testresult.stdout }}"
