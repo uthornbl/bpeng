@@ -1,0 +1,36 @@
+- hosts: all
+  become: true
+  gather_facts: False
+
+  pre_tasks:
+    - raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - setup:
+
+  tasks:
+    - name: install repo key
+      apt_key:
+        id: "58118E89F3A912897C070ADBF76221572C52609D"
+        keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+        state: present
+    - name: Verify docker registry is accessible
+      apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present
+    - name: Install docker + deps
+      apt: name=docker-engine update_cache=yes
+      apt: name=python-pip update_cache=yes
+    - service: name=docker state=restarted
+    - copy: src="nginx-html" dest="~/"
+    - pip:
+        name: docker-py
+    - name: build the nginx image
+      docker_image: >
+        name=nginx-by-ulf
+        tag=v1
+        path=~/nginx-html
+        state=present
+    - name: run alpine with nginx
+      docker:
+        name: site1
+        image: "nginx-by-ulf:v1"
+        state: reloaded
+        ports: 80:80
+    - script: basictest.py
