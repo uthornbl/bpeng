@@ -1,6 +1,6 @@
 # Summary
-This project demonstrates running an alpine/nginx powered micro-service
-inside a Ubuntu VM hosted by Vagrant/VirtualBox.
+This project demonstrates running a docker container with an alpine/nginx powered micro-service.
+The docker container is run from inside a Ubuntu VM hosted by Vagrant/VirtualBox.
 
 # Prep work
 
